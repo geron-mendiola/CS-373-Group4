@@ -3,16 +3,22 @@ package com.tictactoe.tictactoeproject;
 public class GameEntry {
     private String playerX;
     private String playerO;
-    private int score;
+    private int scoreX;
+    private int scoreO;
 
     public GameEntry(String playerX, String playerO){
     this.playerX = playerX;
     this.playerO = playerO;
-    this.score = 0;
+    this.scoreX = 0;
+    this.scoreO = 0;
     }
 
-    public void setScore() {
-        this.score = score;
+    public void setScoreX() {
+        this.scoreX = scoreX;
+    }
+
+    public void setScoreO() {
+        this.scoreO = scoreO;
     }
 
     public String getPlayerX(){
@@ -23,13 +29,16 @@ public class GameEntry {
         return playerO;
     }
 
-    public int getScore(){
-        return score;
+    public int getScoreX(){
+        return scoreX;
     }
 
+    public int getScoreO(){
+        return scoreO;
+    }
     @Override
     public String toString() {
-        return playerX + " " + playerO + " - Score" + score;
+        return (playerX + "'s Score is " + scoreX + ", " + playerO + " - Score" + scoreO);
     }
 }
 

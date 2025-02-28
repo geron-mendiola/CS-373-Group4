@@ -27,15 +27,16 @@ public class TicTacToeGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         initializeBoard();
 
-        playerXNameField = new TextField();
-        playerXNameField.setPromptText("Enter Player X's Name");
-
         playerONameField = new TextField();
         playerONameField.setPromptText("Enter Player O's Name");
+
+        playerXNameField = new TextField();
+        playerXNameField.setPromptText("Enter Player X's Name");
 
         startButton = new Button("Start Game");
         startButton.setOnAction(e -> startGame());
@@ -63,30 +64,35 @@ public class TicTacToeGUI extends Application {
 
     private void updateListview(){
     listView.refresh();
-
-    }
-    private void startGame() {
-        String nameX = playerXNameField.getText();
-        String nameO= playerONameField.getText();
-
-        if (nameX.isEmpty() || nameO.isEmpty()) {
-            showAlert("Please enter both player names!");
-            return;
-        }
-        else if(!n.isEmpty() || !nameX.isEmpty()){
+}
+    private void addName(String nameX, String nameO) {
             GameEntry gameEntry = new GameEntry(nameX, nameO);
             playerList.add(gameEntry);
             updateListview();
             playerXNameField.clear();
             playerONameField.clear();
-        })
+    }
 
+    private void startGame() {
+        String nameX = playerXNameField.getText();
+        String nameO = playerONameField.getText();
+
+        if (nameX.isEmpty() || nameO.isEmpty()) {
+            showAlert("Please enter both player names!");
+            return;
+        }
+        else if(!nameX.isEmpty() || !nameO.isEmpty()) {
+            addName(nameX,nameO);
+        }
+        System.out.println(playerList);
+
+        System.out.println();
         isXTurn = true;
         game.clearBoard();
         resetButton.setDisable(false);
         startButton.setDisable(true);
 
-        turnLabel.setText(playerXName + "'s Turn");
+        turnLabel.setText(nameX + "'s Turn");
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -111,6 +117,7 @@ public class TicTacToeGUI extends Application {
             }
         }
     }
+
 
     private void showAlert(String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
