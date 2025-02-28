@@ -1,26 +1,29 @@
 package com.tictactoe.tictactoeproject;
 
 import javafx.application.Application;
+import javafx.beans.Observable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+
+import java.util.LinkedList;
 
 public class TicTacToeGUI extends Application {
     private Button[][] buttons = new Button[3][3];
     private Tic_Tac_Toe1 game = new Tic_Tac_Toe1();
     private boolean isXTurn = true;
-    private Button startButton, resetButton;
+    private Button startButton, resetButton, addButton;
     private Label turnLabel;
     private GridPane grid;
     private TextField playerXNameField, playerONameField;
+
+    private LinkedList<GameEntry> playerList = new LinkedList<>();
+    private ListView<String> listView = new ListView<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -29,8 +32,9 @@ public class TicTacToeGUI extends Application {
         initializeBoard();
 
         playerXNameField = new TextField();
-        playerONameField = new TextField();
         playerXNameField.setPromptText("Enter Player X's Name");
+
+        playerONameField = new TextField();
         playerONameField.setPromptText("Enter Player O's Name");
 
         startButton = new Button("Start Game");
@@ -56,14 +60,26 @@ public class TicTacToeGUI extends Application {
         primaryStage.show();
     }
 
-    private void startGame() {
-        String playerXName = playerXNameField.getText();
-        String playerOName = playerONameField.getText();
 
-        if (playerXName.isEmpty() || playerOName.isEmpty()) {
+    private void updateListview(){
+    listView.refresh();
+
+    }
+    private void startGame() {
+        String nameX = playerXNameField.getText();
+        String nameO= playerONameField.getText();
+
+        if (nameX.isEmpty() || nameO.isEmpty()) {
             showAlert("Please enter both player names!");
             return;
         }
+        else if(!n.isEmpty() || !nameX.isEmpty()){
+            GameEntry gameEntry = new GameEntry(nameX, nameO);
+            playerList.add(gameEntry);
+            updateListview();
+            playerXNameField.clear();
+            playerONameField.clear();
+        })
 
         isXTurn = true;
         game.clearBoard();
@@ -151,6 +167,7 @@ public class TicTacToeGUI extends Application {
             showAlert(ex.getMessage());
         }
     }
+
 
     private boolean isBoardFull() {
         for (int i = 0; i < 3; i++) {
