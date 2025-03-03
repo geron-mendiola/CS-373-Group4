@@ -90,9 +90,9 @@ public class TicTacToeGUI extends Application {
             String nameO = playerOName;
             if (playerOName == null) return;
 
-            addName(playerXName,playerOName);
+            GameEntry newEntry = new GameEntry(playerXName, playerOName);
+            playerList.add(newEntry);
         }
-
         System.out.println(playerList);
 
         isXTurn = true;
@@ -135,18 +135,18 @@ public class TicTacToeGUI extends Application {
 
     private void checkStatus() {
         int winner = game.winner();
-        for (GameEntry entry : playerList) {
-            if (winner == Tic_Tac_Toe1.X) {
-                entry.increaseScore(true);
-                System.out.println(entry); // Print updated scores for debugging
-                break;
-            } else if (winner == Tic_Tac_Toe1.O) {
-                entry.increaseScore(false);
-                System.out.println(entry); // Print updated scores for debugging
+
+        //prints the score only when there is a winner
+        if (winner != 0) {
+            for (GameEntry entry : playerList) {
+                if (winner == Tic_Tac_Toe1.X) {
+                    entry.increaseScore(true);
+                } else if (winner == Tic_Tac_Toe1.O) {
+                    entry.increaseScore(false);
+                }
+                System.out.println(entry);
                 break;
             }
-        }
-        if (winner != 0) {
             showAlert((winner == Tic_Tac_Toe1.X ? playerXName : playerOName) + " wins!");
             turnLabel.setText((winner == Tic_Tac_Toe1.X ? playerXName : playerOName) + " wins!");
             Replay();
