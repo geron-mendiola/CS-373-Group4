@@ -3,8 +3,8 @@ package com.tictactoe.tictactoeproject;
 public class GameEntry {
     private String playerX;
     private String playerO;
-    private int scoreX;
-    private int scoreO;
+    public int scoreX;
+    public int scoreO;
 
     public GameEntry(String playerX, String playerO){
     this.playerX = playerX;
@@ -36,9 +36,18 @@ public class GameEntry {
     public int getScoreO(){
         return scoreO;
     }
+
+    public void increaseScore(boolean winX) {
+        if (winX) {
+            this.scoreX++;
+        } else if (!winX){
+            this.scoreO++;
+        }
+    }
+
     @Override
     public String toString() {
-        return (playerX + "'s Score is " + scoreX + ", " + playerO + " - Score" + scoreO);
+        return (playerX + "'s Score: " + scoreX + ", " + playerO + "'s Score: " + scoreO);
     }
 }
 

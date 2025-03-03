@@ -41,8 +41,9 @@ public class Tic_Tac_Toe1 {
     }
 
     public int winner( ) {
-        if (isWin(X))
-            return(X);
+        if (isWin(X)) {
+            return (X);
+        }
         else if (isWin(O))
             return(O);
         else
@@ -67,7 +68,6 @@ public class Tic_Tac_Toe1 {
 
     public static void main(String[ ] args) {
         Tic_Tac_Toe1 game = new Tic_Tac_Toe1( );
-
         Scanner input = new Scanner(System.in);
         for(int k=0; k<9; k++) {
             System.out.print("Enter X value: ");
