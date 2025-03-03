@@ -39,8 +39,10 @@ public class GameEntry {
 
     public void increaseScore(boolean winX) {
         if (winX) {
+            //increases if x wins
             this.scoreX++;
         } else if (!winX){
+            //increases if O wins
             this.scoreO++;
         }
     }

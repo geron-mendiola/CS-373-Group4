@@ -15,7 +15,7 @@ public class TicTacToeGUI extends Application {
     private Button[][] buttons = new Button[3][3];
     private Tic_Tac_Toe1 game = new Tic_Tac_Toe1();
     private boolean isXTurn = true;
-    private Button startButton, resetButton, returnButton;
+    private Button startButton, resetButton, returnButton, scoreButton;
     private Label turnLabel;
     private GridPane grid;
     private String playerXName, playerOName;
@@ -63,10 +63,13 @@ public class TicTacToeGUI extends Application {
         returnButton = new Button("Return to Main Menu");
         returnButton.setOnAction(e -> mainStage.setScene(welcomeScene));
 
+        scoreButton = new Button("Score");
+        scoreButton.setOnAction(e ->showScore());
+
         turnLabel = new Label("Press Start to Begin");
         turnLabel.setFont(new Font("Arial", 16));
 
-        VBox vbox = new VBox(10, startButton, resetButton, returnButton, turnLabel, grid);
+        VBox vbox = new VBox(10, startButton, resetButton, returnButton, scoreButton,turnLabel, grid);
         vbox.setAlignment(Pos.CENTER);
         vbox.setStyle("-fx-background-color: #ffb6c1;");
 
@@ -118,6 +121,13 @@ public class TicTacToeGUI extends Application {
         return dialog.showAndWait().orElse(null);
     }
 
+    private void showScore() {
+        for(GameEntry entry: playerList) {
+            System.out.println(entry);
+        }
+    }
+
+
     private void resetGame() {
         game.clearBoard();
         isXTurn = true;
@@ -139,13 +149,16 @@ public class TicTacToeGUI extends Application {
         //prints the score only when there is a winner
         if (winner != 0) {
             for (GameEntry entry : playerList) {
-                if (winner == Tic_Tac_Toe1.X) {
-                    entry.increaseScore(true);
-                } else if (winner == Tic_Tac_Toe1.O) {
-                    entry.increaseScore(false);
+                //updates player names in the list if new players are added
+                if (entry.getPlayerX().equals(playerXName) && entry.getPlayerO().equals(playerOName)) {
+                    if (winner == Tic_Tac_Toe1.X) {
+                        entry.increaseScore(true);
+                    } else if (winner == Tic_Tac_Toe1.O) {
+                        entry.increaseScore(false);
+                    }
+                    System.out.println(entry);
+                    break;
                 }
-                System.out.println(entry);
-                break;
             }
             showAlert((winner == Tic_Tac_Toe1.X ? playerXName : playerOName) + " wins!");
             turnLabel.setText((winner == Tic_Tac_Toe1.X ? playerXName : playerOName) + " wins!");
