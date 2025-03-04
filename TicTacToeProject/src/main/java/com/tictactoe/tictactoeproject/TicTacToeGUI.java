@@ -4,18 +4,17 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
-import javafx.scene.image.ImageView;
 
-
-import javax.net.ssl.SSLContext;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -34,14 +33,12 @@ public class TicTacToeGUI extends Application {
 
     private LinkedList<GameEntry> playerList = new LinkedList<>();
     private ListView<String> listView = new ListView<>();
-    Image imgIcon = new Image("UOGLogo.jpg2");
-
 
     @Override
     public void start(Stage primaryStage) {
         mainStage = primaryStage;
 
-        VBox welcomeLayout = new VBox(50);
+        VBox welcomeLayout = new VBox(20);
         welcomeLayout.setAlignment(Pos.CENTER);
         Label welcomeLabel = new Label("Welcome to Tic-Tac-Toe!");
         welcomeLabel.setFont(new Font("Arial", 20));
@@ -53,17 +50,24 @@ public class TicTacToeGUI extends Application {
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> primaryStage.close());
 
-        welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton);
+        Button siteButton = new Button("Visit UOG Website");
+        siteButton.setOnAction(e -> {
+            try {
+                visitSite();
+            } catch (URISyntaxException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton, siteButton);
         welcomeScene = new Scene(welcomeLayout, 400, 300);
 
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(welcomeScene);
         primaryStage.show();
         primaryStage.centerOnScreen();
-
-        primaryStage.getIcons().add(imgIcon);
-        mainStage.getIcons().add(imgIcon);
-
     }
 
     private void showGameScene() {
@@ -112,26 +116,12 @@ public class TicTacToeGUI extends Application {
     }
 
     private void addName(String nameX, String nameO) {
-        boolean playerXExists = false;
-        boolean playerOExists = false;
+        GameEntry newEntryX = new GameEntry(nameX);
+        GameEntry newEntryO = new GameEntry(nameO);
+        playerList.add(newEntryX);
+        playerList.add(newEntryO);
 
-        for (GameEntry entry : playerList) {
-            if (entry.getPlayerName().equals(nameX)) {
-                playerXExists = true;
-            }
-            if (entry.getPlayerName().equals(nameO)) {
-                playerOExists = true;
-            }
-        }
-
-        if (!playerXExists) {
-            playerList.add(new GameEntry(nameX));
-        }
-        if (!playerOExists) {
-            playerList.add(new GameEntry(nameO));
-        }
     }
-
 
     private void sortScores() {
         Collections.sort(playerList);
@@ -230,7 +220,6 @@ public class TicTacToeGUI extends Application {
         alert.setHeaderText(null);
         alert.setContentText("Would the same players like to continue playing?");
 
-
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
         alert.getButtonTypes().setAll(yesButton, noButton);
@@ -288,8 +277,9 @@ public class TicTacToeGUI extends Application {
         alert.showAndWait();
     }
 
-
-
+    private void visitSite() throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://www.uog.edu"));
+    }
     public static void main(String[] args) {
         launch(args);
     }
