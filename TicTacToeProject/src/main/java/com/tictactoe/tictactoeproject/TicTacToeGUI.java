@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -11,6 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import javafx.scene.image.ImageView;
+
 
 import javax.net.ssl.SSLContext;
 import java.util.Collections;
@@ -31,6 +34,8 @@ public class TicTacToeGUI extends Application {
 
     private LinkedList<GameEntry> playerList = new LinkedList<>();
     private ListView<String> listView = new ListView<>();
+    Image imgIcon = new Image("UOGLogo.jpg2");
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -55,6 +60,10 @@ public class TicTacToeGUI extends Application {
         primaryStage.setScene(welcomeScene);
         primaryStage.show();
         primaryStage.centerOnScreen();
+
+        primaryStage.getIcons().add(imgIcon);
+        mainStage.getIcons().add(imgIcon);
+
     }
 
     private void showGameScene() {
@@ -103,12 +112,26 @@ public class TicTacToeGUI extends Application {
     }
 
     private void addName(String nameX, String nameO) {
-        GameEntry newEntryX = new GameEntry(nameX);
-        GameEntry newEntryO = new GameEntry(nameO);
-        playerList.add(newEntryX);
-        playerList.add(newEntryO);
+        boolean playerXExists = false;
+        boolean playerOExists = false;
 
+        for (GameEntry entry : playerList) {
+            if (entry.getPlayerName().equals(nameX)) {
+                playerXExists = true;
+            }
+            if (entry.getPlayerName().equals(nameO)) {
+                playerOExists = true;
+            }
+        }
+
+        if (!playerXExists) {
+            playerList.add(new GameEntry(nameX));
+        }
+        if (!playerOExists) {
+            playerList.add(new GameEntry(nameO));
+        }
     }
+
 
     private void sortScores() {
         Collections.sort(playerList);
@@ -207,6 +230,7 @@ public class TicTacToeGUI extends Application {
         alert.setHeaderText(null);
         alert.setContentText("Would the same players like to continue playing?");
 
+
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
         alert.getButtonTypes().setAll(yesButton, noButton);
@@ -263,6 +287,8 @@ public class TicTacToeGUI extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
