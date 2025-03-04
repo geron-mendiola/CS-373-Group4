@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -33,7 +34,7 @@ public class TicTacToeGUI extends Application {
 
     private LinkedList<GameEntry> playerList = new LinkedList<>();
     private ListView<String> listView = new ListView<>();
-
+    Image imgIcon = new Image("UOGLogo.jpg");
     @Override
     public void start(Stage primaryStage) {
         mainStage = primaryStage;
@@ -68,6 +69,8 @@ public class TicTacToeGUI extends Application {
         primaryStage.setScene(welcomeScene);
         primaryStage.show();
         primaryStage.centerOnScreen();
+
+        primaryStage.getIcons().add(imgIcon);
     }
 
     private void showGameScene() {
