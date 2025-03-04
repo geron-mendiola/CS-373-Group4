@@ -4,11 +4,17 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 
 public class TicTacToeGUI extends Application {
@@ -40,7 +46,18 @@ public class TicTacToeGUI extends Application {
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> primaryStage.close());
 
-        welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton);
+        Button siteButton = new Button("Visit the UOG website");
+        siteButton.setOnAction(e -> {
+            try {
+                visitSite();
+            } catch (URISyntaxException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton, siteButton);
         welcomeScene = new Scene(welcomeLayout, 400, 300);
 
         primaryStage.setTitle("Tic-Tac-Toe");
@@ -232,6 +249,10 @@ public class TicTacToeGUI extends Application {
         alert.setHeaderText("Game Result");
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void visitSite() throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://www.uog.edu"));
     }
 
     public static void main(String[] args) {
