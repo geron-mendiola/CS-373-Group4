@@ -109,7 +109,7 @@ public class TicTacToeGUI extends Application {
 
         VBox scoreBox = new VBox(10,Title ,scoreLabel, backButton);
         scoreBox.setAlignment(Pos.TOP_CENTER);
-        scoreBox.setStyle("-fx-background-color: #ADD8E6;");
+        scoreBox.setStyle("-fx-background-color: #ffb6c1;");
         scoreScene = new Scene(scoreBox, 500, 600);
 
         gameScene = new Scene(vbox, 500, 600);
