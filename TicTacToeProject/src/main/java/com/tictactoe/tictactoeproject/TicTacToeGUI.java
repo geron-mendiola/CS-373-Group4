@@ -4,15 +4,17 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 
-import javax.net.ssl.SSLContext;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -36,7 +38,7 @@ public class TicTacToeGUI extends Application {
     public void start(Stage primaryStage) {
         mainStage = primaryStage;
 
-        VBox welcomeLayout = new VBox(50);
+        VBox welcomeLayout = new VBox(20);
         welcomeLayout.setAlignment(Pos.CENTER);
         Label welcomeLabel = new Label("Welcome to Tic-Tac-Toe!");
         welcomeLabel.setFont(new Font("Arial", 20));
@@ -48,7 +50,18 @@ public class TicTacToeGUI extends Application {
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(e -> primaryStage.close());
 
-        welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton);
+        Button siteButton = new Button("Visit UOG Website");
+        siteButton.setOnAction(e -> {
+            try {
+                visitSite();
+            } catch (URISyntaxException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton, siteButton);
         welcomeScene = new Scene(welcomeLayout, 400, 300);
 
         primaryStage.setTitle("Tic Tac Toe");
@@ -264,6 +277,9 @@ public class TicTacToeGUI extends Application {
         alert.showAndWait();
     }
 
+    private void visitSite() throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://www.uog.edu"));
+    }
     public static void main(String[] args) {
         launch(args);
     }
