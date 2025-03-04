@@ -1,55 +1,38 @@
 package com.tictactoe.tictactoeproject;
 
-public class GameEntry {
-    private String playerX;
-    private String playerO;
-    public int scoreX;
-    public int scoreO;
+import javafx.scene.control.ListView;
 
-    public GameEntry(String playerX, String playerO){
-    this.playerX = playerX;
-    this.playerO = playerO;
-    this.scoreX = 0;
-    this.scoreO = 0;
+import java.util.Comparator;
+import java.util.LinkedList;
+
+class GameEntry implements Comparable<GameEntry> {
+    private String playerName;
+    private int wins;
+
+    public GameEntry(String playerName) {
+        this.playerName = playerName;
+        this.wins = 0;
     }
 
-    public void setScoreX() {
-        this.scoreX = scoreX;
+    public String getPlayerName() {
+        return playerName;
     }
 
-    public void setScoreO() {
-        this.scoreO = scoreO;
+    public int getWins() {
+        return wins;
     }
 
-    public String getPlayerX(){
-        return playerX;
+    public void increaseScore() {
+        wins++;
     }
 
-    public String getPlayerO(){
-        return playerO;
-    }
-
-    public int getScoreX(){
-        return scoreX;
-    }
-
-    public int getScoreO(){
-        return scoreO;
-    }
-
-    public void increaseScore(boolean winX) {
-        if (winX) {
-            //increases if x wins
-            this.scoreX++;
-        } else if (!winX){
-            //increases if O wins
-            this.scoreO++;
-        }
+    @Override
+    public int compareTo(GameEntry other) {
+        return Integer.compare(other.wins, this.wins);  // Sort in descending order of wins
     }
 
     @Override
     public String toString() {
-        return (playerX + "'s Score: " + scoreX + ", " + playerO + "'s Score: " + scoreO);
+        return playerName + ": " + wins + " wins";
     }
 }
-

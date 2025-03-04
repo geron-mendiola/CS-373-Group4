@@ -72,6 +72,7 @@ public class Tic_Tac_Toe1 {
         for(int k=0; k<9; k++) {
             System.out.print("Enter X value: ");
             int x_value = input.nextInt();
+
             System.out.print("Enter Y value: ");
             int y_value = input.nextInt();
 

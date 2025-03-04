@@ -5,22 +5,29 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 
+import javax.net.ssl.SSLContext;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class TicTacToeGUI extends Application {
+
     private Button[][] buttons = new Button[3][3];
     private Tic_Tac_Toe1 game = new Tic_Tac_Toe1();
     private boolean isXTurn = true;
-    private Button startButton, resetButton, returnButton, scoreButton;
-    private Label turnLabel;
+    private Button startButton;
+    private Button resetButton;
+    private Label turnLabel, scoreLabel;
     private GridPane grid;
     private String playerXName, playerOName;
     private Stage mainStage;
-    private Scene welcomeScene, gameScene;
+    private Scene welcomeScene, gameScene, scoreScene;
 
     private LinkedList<GameEntry> playerList = new LinkedList<>();
     private ListView<String> listView = new ListView<>();
@@ -29,10 +36,11 @@ public class TicTacToeGUI extends Application {
     public void start(Stage primaryStage) {
         mainStage = primaryStage;
 
-        VBox welcomeLayout = new VBox(20);
+        VBox welcomeLayout = new VBox(50);
         welcomeLayout.setAlignment(Pos.CENTER);
         Label welcomeLabel = new Label("Welcome to Tic-Tac-Toe!");
         welcomeLabel.setFont(new Font("Arial", 20));
+        welcomeLayout.setStyle("-fx-background-color: #ffb6c1;");
 
         Button playButton = new Button("Play");
         playButton.setOnAction(e -> showGameScene());
@@ -43,9 +51,10 @@ public class TicTacToeGUI extends Application {
         welcomeLayout.getChildren().addAll(welcomeLabel, playButton, exitButton);
         welcomeScene = new Scene(welcomeLayout, 400, 300);
 
-        primaryStage.setTitle("Tic-Tac-Toe");
+        primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(welcomeScene);
         primaryStage.show();
+        primaryStage.centerOnScreen();
     }
 
     private void showGameScene() {
@@ -60,43 +69,65 @@ public class TicTacToeGUI extends Application {
         resetButton.setOnAction(e -> resetGame());
         resetButton.setDisable(true);
 
-        returnButton = new Button("Return to Main Menu");
-        returnButton.setOnAction(e -> mainStage.setScene(welcomeScene));
+        Button returnMenuButton = new Button("Return to Main Menu");
+        returnMenuButton.setOnAction(e -> mainStage.setScene(welcomeScene));
 
-        scoreButton = new Button("Score");
-        scoreButton.setOnAction(e ->showScore());
+        Button backButton = new Button("Return to Game");
+        backButton.setOnAction(e -> mainStage.setScene(gameScene));
+
+
+        Button scoreButton = new Button("Score");
+        scoreButton.setOnAction(e -> showScore());
+        scoreLabel = new Label("");
+        scoreLabel.setFont(new Font("Arial", 24));
+
+        Label Title = new Label("Scores:");
+        Title.setFont(new Font("Arial", 20));
 
         turnLabel = new Label("Press Start to Begin");
         turnLabel.setFont(new Font("Arial", 16));
 
-        VBox vbox = new VBox(10, startButton, resetButton, returnButton, scoreButton,turnLabel, grid);
+        VBox vbox = new VBox(10, startButton, resetButton, returnMenuButton, scoreButton, turnLabel, scoreLabel, grid);
         vbox.setAlignment(Pos.CENTER);
         vbox.setStyle("-fx-background-color: #ffb6c1;");
 
+        VBox scoreBox = new VBox(10,Title ,scoreLabel, backButton);
+        scoreBox.setAlignment(Pos.TOP_CENTER);
+        scoreBox.setStyle("-fx-background-color: #ADD8E6;");
+        scoreScene = new Scene(scoreBox, 500, 600);
+
         gameScene = new Scene(vbox, 500, 600);
         mainStage.setScene(gameScene);
+
+
     }
 
     private void addName(String nameX, String nameO) {
-        GameEntry gameEntry = new GameEntry(nameX, nameO);
-        playerList.add(gameEntry);
+        GameEntry newEntryX = new GameEntry(nameX);
+        GameEntry newEntryO = new GameEntry(nameO);
+        playerList.add(newEntryX);
+        playerList.add(newEntryO);
+
+    }
+
+    private void sortScores() {
+        Collections.sort(playerList);
+        if (playerList.size() > 5) {
+            playerList = new LinkedList<>(playerList.subList(0, 5));  // Keep only top 5 players
+        }
     }
 
 
     private void startGame(boolean askNames) {
         if (askNames) {
             playerXName = getPlayerName("Enter Player X's Name:");
-            String nameX = playerXName;
             if (playerXName == null) return;
 
             playerOName = getPlayerName("Enter Player O's Name:");
-            String nameO = playerOName;
             if (playerOName == null) return;
 
-            GameEntry newEntry = new GameEntry(playerXName, playerOName);
-            playerList.add(newEntry);
+            addName(playerXName, playerOName);
         }
-        System.out.println(playerList);
 
         isXTurn = true;
         game.clearBoard();
@@ -122,11 +153,14 @@ public class TicTacToeGUI extends Application {
     }
 
     private void showScore() {
+        mainStage.setScene(scoreScene);
+        sortScores();
+        StringBuilder scores = new StringBuilder();
         for(GameEntry entry: playerList) {
-            System.out.println(entry);
-        }
+           scores.append(entry.toString()).append("\n");
+           }
+        scoreLabel.setText(scores.toString());
     }
-
 
     private void resetGame() {
         game.clearBoard();
@@ -145,18 +179,13 @@ public class TicTacToeGUI extends Application {
 
     private void checkStatus() {
         int winner = game.winner();
-
-        //prints the score only when there is a winner
         if (winner != 0) {
             for (GameEntry entry : playerList) {
-                //updates player names in the list if new players are added
-                if (entry.getPlayerX().equals(playerXName) && entry.getPlayerO().equals(playerOName)) {
-                    if (winner == Tic_Tac_Toe1.X) {
-                        entry.increaseScore(true);
-                    } else if (winner == Tic_Tac_Toe1.O) {
-                        entry.increaseScore(false);
-                    }
-                    System.out.println(entry);
+                if (entry.getPlayerName().equals(playerXName) && winner == Tic_Tac_Toe1.X) {
+                    entry.increaseScore();
+                    break;
+                } else if (entry.getPlayerName().equals(playerOName) && winner == Tic_Tac_Toe1.O) {
+                    entry.increaseScore();
                     break;
                 }
             }
@@ -170,6 +199,7 @@ public class TicTacToeGUI extends Application {
             Replay();
         }
     }
+
 
     private void Replay() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
