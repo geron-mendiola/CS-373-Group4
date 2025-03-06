@@ -7,17 +7,20 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 
-import java.awt.*;
 import java.io.IOException;
+
+import java.awt.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TicTacToeGUI extends Application {
 
@@ -35,6 +38,13 @@ public class TicTacToeGUI extends Application {
     private LinkedList<GameEntry> playerList = new LinkedList<>();
     private ListView<String> listView = new ListView<>();
     Image imgIcon = new Image("UOGLogo.jpg");
+    Image imgBackground = new Image("tiktactoe.jpeg");
+    private AtomicInteger yesCount = new AtomicInteger(0);
+    ImageView background = new ImageView();
+//    background.
+//    background.setFitHeight(1);
+
+
     @Override
     public void start(Stage primaryStage) {
         mainStage = primaryStage;
@@ -160,6 +170,31 @@ public class TicTacToeGUI extends Application {
         }
     }
 
+    private void startGame2(boolean askNames) {
+        if (askNames) {
+            playerXName = getPlayerName("Enter Player X's Name:");
+            if (playerXName == null) return;
+
+            playerOName = getPlayerName("Enter Player O's Name:");
+            if (playerOName == null) return;
+
+            addName(playerXName, playerOName);
+        }
+
+        isXTurn = true;
+        game.clearBoard();
+        resetButton.setDisable(false);
+        startButton.setDisable(true);
+        turnLabel.setText(playerOName + "'s Turn");
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                buttons[i][j].setText(" ");
+                buttons[i][j].setDisable(false);
+                buttons[i][j].setStyle("-fx-opacity: 1;");
+            }
+        }
+    }
     private String getPlayerName(String prompt) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Player Name");
@@ -218,6 +253,7 @@ public class TicTacToeGUI extends Application {
 
 
     private void Replay() {
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Play Again?");
         alert.setHeaderText(null);
@@ -226,11 +262,20 @@ public class TicTacToeGUI extends Application {
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
         alert.getButtonTypes().setAll(yesButton, noButton);
-
         alert.showAndWait().ifPresent(response -> {
-            startGame(response != yesButton);
+
+            if (response == yesButton) {
+                int count = yesCount.incrementAndGet();
+                if (count %2 == 0){
+                    startGame(false);
+                }
+                else {
+                    startGame2(false);
+                }
+            }
         });
     }
+
 
     private void initializeBoard() {
         for (int i = 0; i < 3; i++) {
